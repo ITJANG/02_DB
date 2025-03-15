@@ -79,29 +79,37 @@ COMMIT;
 -- 1.쇼핑몰 관리자가 주문은 받았으나, 아직 처리가 안된 주문을 처리하려고
 -- 한다. 현재 주문 내역 중 아직 처리되지 않은 주문을 조회하시오. 😀
 -- (고객명, 주문일, 처리상태)
-SELECT NAME, ORDER_DATE, STATUS
+SELECT NAME 고객명, ORDER_DATE 주문일, STATUS 처리상태
 FROM CUSTOMERS
 JOIN ORDERS USING (CUSTOMER_ID)
 WHERE STATUS = 'N';
 
+
+
 -- 2. 홍길동 고객이 2024년도에 본인이 주문한 전체 내역을 조회하고자 한다.
 -- 주문번호, 주문날짜, 처리상태 조회하시오
-SELECT ORDER_ID, ORDER_DATE, STATUS
+SELECT ORDER_ID 주문번호, ORDER_DATE 주문날짜, STATUS 처리상태
+FROM (SELECT *
 FROM CUSTOMERS
 JOIN ORDERS USING (CUSTOMER_ID)
+WHERE ORDER_DATE BETWEEN TO_DATE('2024-01-01') AND TO_DATE('2024-12-31'))
 WHERE NAME = '홍길동';
 
-SELECT ORDER_ID, ORDER_DATE, STATUS
+
+
+
+-- 3. 유관순 고객이 지금껏 주문한 상품의 수량 별 금액을 조회하려고 한다.
+-- 주문번호, 상품명, 수량, 개별금액, 주문별금액을 조회하시오
+
+SELECT ORDER_ID 주문번호, PRODUCT_NAME 상품명, QUANTITY 수량, 
+			 PRICE 개별금액, PRICE_PER_UNIT 주문별금액합계
+--     ORDERS    PRODUCTS  		 ORDER_DETAILS
 FROM CUSTOMERS
 JOIN ORDERS USING (CUSTOMER_ID)
-WHERE ORDER_DATE LIKE '2024%'
-
-
-
-
-
-
-
+JOIN ORDER_DETAILS USING (ORDER_ID)
+JOIN PRODUCTS USING (PRODUCT_ID)
+WHERE NAME = '유관순'
+ORDER BY QUANTITY DESC;
 
 
 
